@@ -1,0 +1,36 @@
+```{r}
+library(Seurat)
+library(SeuratData)
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(legendry)
+```
+
+```{r}
+brain <- LoadData("stxBrain", type = "anterior1")
+```
+```{r}
+plot1 <- VlnPlot(brain, features = "nCount_Spatial", pt.size = 0.1) + NoLegend()
+plot2 <- SpatialFeaturePlot(brain, features = "nCount_Spatial") + theme(legend.position = "right")
+wrap_plots(plot1, plot2)
+```
+```{r}
+brain <- SCTransform(brain, assay = "Spatial", verbose = FALSE)
+```
+```{r}
+SpatialFeaturePlot(brain, features = c("Hpca", "Ttr"))
+```
+
+
+```{r}
+hpca_plot <- SpatialFeaturePlot(brain, features = c("Hpca")) +
+  guides(fill = legendry::gizmo_histogram())
+
+ttr_plot <- SpatialFeaturePlot(brain, features = c("Ttr")) +
+  guides(fill = legendry::gizmo_histogram())
+
+hpca_plot + ttr_plot
+```
+
+
